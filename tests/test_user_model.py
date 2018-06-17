@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from app.models import User
+from app.models.user import User
 
 
 class UserModelTestCase(unittest.TestCase):
     def test_password_setter(self):
         user = User(password='cat')
-        self.assertTrue(user.password is not None)
+        self.assertTrue(user.password_hash is not None)
 
     def test_no_password_getter(self):
         user = User(password='cat')
