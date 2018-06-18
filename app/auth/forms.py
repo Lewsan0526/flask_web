@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Length, Email, Regexp, EqualTo, ValidationError, DataRequired
@@ -34,7 +35,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Username already in use.')
 
 
-class ResetPasswordForm(FlaskForm):
+class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('Old password', validators=[DataRequired()])
     password = PasswordField('New password', validators=[
         DataRequired(),
@@ -42,3 +43,7 @@ class ResetPasswordForm(FlaskForm):
     ])
     password2 = PasswordField('Confirm new password', validators=[DataRequired()])
     submit = SubmitField('Update password')
+
+    def validate_password(self, field):
+        if current_user.verify_password(field.data):
+            raise ValidationError('New password is the same as old password.')

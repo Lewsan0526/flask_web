@@ -4,7 +4,7 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 
 from . import auth
-from .forms import LoginForm, RegistrationForm, ResetPasswordForm
+from .forms import LoginForm, RegistrationForm, ChangePasswordForm
 from .. import db
 from ..models.user import User
 from ..email import send_email
@@ -87,10 +87,10 @@ def resend_confirmation():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/resetpassword', methods=['GET', 'POST'])
+@auth.route('/change_password', methods=['GET', 'POST'])
 @login_required
-def reset_password():
-    form = ResetPasswordForm()
+def change_password():
+    form = ChangePasswordForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.old_password.data):
             current_user.password = form.password.data
@@ -100,4 +100,4 @@ def reset_password():
             return redirect(url_for('main.index'))
         else:
             flash(('Invalid password.'))
-    return render_template('auth/reset_password.html', form=form)
+    return render_template('auth/change_password.html', form=form)
