@@ -16,13 +16,13 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
+    password = PasswordField('Password',
+                             validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
     username = StringField('Username', validators=[
         DataRequired(),
         Length(1, 64),
         Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Usernames must have only letters, numbers, dots or underscores')
     ])
-    password = PasswordField('Password',
-                             validators=[DataRequired(), EqualTo('password2', message='Passwords must match')])
     password2 = PasswordField('Confirm password', validators=[DataRequired()])
     submit = SubmitField('register')
 
@@ -58,3 +58,27 @@ class PasswordResetForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired(), EqualTo('password2', 'Password must match')])
     password2 = PasswordField('confirm password', validators=[DataRequired()])
     submit = SubmitField('Reset Password')
+
+
+class ChangeEmailForm(FlaskForm):
+    email = StringField('New email', validators=[DataRequired(), Length(1, 64), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Update Email Address')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered.')
+
+
+class ChangeUserNameForm(FlaskForm):
+    name = StringField('New name', validators=[
+        DataRequired(),
+        Length(1, 64),
+        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Usernames must have only letters, numbers, dots or underscores'),
+    ])
+    password = PasswordField('password', validators=[DataRequired()])
+    submit = SubmitField("Update Name")
+
+    def validate_name(self, field):
+        if User.query.filter_by(name=field.data).first():
+            raise ValidationError('Name already exists.')
