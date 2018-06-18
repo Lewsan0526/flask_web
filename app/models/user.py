@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+import hashlib
+
 from datetime import datetime
 
 from flask import current_app
@@ -24,6 +27,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    avatar_hash = db.Column(db.String(32))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -32,6 +36,8 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(name='Administrator').first()
             else:
                 self.role = Role.query.filter_by(default=True).first()
+        if self.email and not self.avatar_hash:
+            self.avatar_hash = self.gravatar_hash()
 
     @property
     def password(self):
@@ -43,9 +49,6 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return '<User %r>' % self.name
 
     def generate_confirmation_token(self):
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -99,6 +102,7 @@ class User(UserMixin, db.Model):
         if self.query.filter_by(email=new_email).first():
             return False
         self.email = new_email
+        self.avatar_hash = self.gravatar_hash()
         db.session.add(self)
         return True
 
@@ -122,8 +126,17 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
 
+    def gravatar_hash(self):
+        return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        url = 'https://secure.gravatar.com/avatar'
+        hash = self.avatar_hash or self.gravatar_hash()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=hash, size=size, default=default, rating=rating)
+
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.name
 
 
 class AnonymousUser(AnonymousUserMixin):
