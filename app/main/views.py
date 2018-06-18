@@ -32,7 +32,7 @@ def index():
 
 @main.route('/user/<username>')
 def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter_by(name=username).first_or_404()
     page = request.args.get('page', 1, type=int)
 
     pagination = user.posts.order_by(Post.timestamp.desc()).paginate(
