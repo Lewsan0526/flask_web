@@ -11,16 +11,18 @@ from .forms import (LoginForm,
                     PasswordResetRequestForm, ChangeEmailForm, ChangeUserNameForm)
 from .. import db
 from ..models.user import User
-from ..email import send_email
+from app.utils.email import send_email
 
 
 @auth.before_app_first_request
 def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request.endpoint[:5] != 'auth' \
-            and request.endpoint != 'static':
-        return redirect(url_for('auth.unconfirmed'))
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint \
+                and request.blueprint != 'auth' \
+                and request.endpoint != 'static':
+            return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/unconfirmed')

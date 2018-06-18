@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from flask import current_app
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db
+from .role import Role, Permission
 from .. import login_manager
 
 
@@ -16,9 +19,19 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
+    real_name = db.Column(db.String(64))
+    location = db.Column(db.String(64))
+    about_me = db.Column(db.Text())
+    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if not self.role:
+            if self.email == current_app.config['FLASKY_ADMIN']:
+                self.role = Role.query.filter_by(name='Administrator').first()
+            else:
+                self.role = Role.query.filter_by(default=True).first()
 
     @property
     def password(self):
@@ -98,6 +111,30 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
         return True
+
+    def can(self, permissons):
+        return self.role is not None and self.role.has_permission(permissons)
+
+    def is_administrator(self):
+        return self.can(Permission.ADMIN)
+
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+
+
+class AnonymousUser(AnonymousUserMixin):
+    def can(self, permissions):
+        return False
+
+    def is_administrator(self):
+        return False
+
+
+login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader
