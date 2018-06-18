@@ -15,6 +15,7 @@ class Config:
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN') or "lewsan@example.com"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    FLASKY_POSTS_PER_PAGE = 10
 
     @staticmethod
     def init_app(app):
