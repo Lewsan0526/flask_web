@@ -8,7 +8,7 @@ from flask import abort
 from ..models.role import Permission
 
 
-def permisson_required(permisson):
+def permission_required(permisson):
     def decorator(f):
         @wraps(f)
         def decorator_func(*args, **kwargs):
@@ -22,4 +22,4 @@ def permisson_required(permisson):
 
 
 def admin_required(f):
-    return permisson_required(Permission.ADMIN)(f)
+    return permission_required(Permission.ADMIN)(f)
