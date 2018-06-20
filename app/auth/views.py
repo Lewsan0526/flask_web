@@ -13,7 +13,6 @@ from .. import db
 from ..models.user import User
 from app.utils.email import send_email
 
-from flask import  jsonify
 @auth.before_app_first_request
 def before_request():
     if current_user.is_authenticated:
