@@ -1,5 +1,7 @@
 .idea
 .idea/*
+tmp
+tmp/*
 *.log
 *.pyc
 *.sqlite

@@ -5,13 +5,25 @@ import unittest
 
 from datetime import datetime
 
-from app import db
+from app import db, create_app
 from app.models.follow import Follow
 from app.models.role import Permission, Role
 from app.models.user import User, AnonymousUser
 
 
 class UserModelTestCase(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app('testing')
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        Role.insert_roles()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
     def test_password_setter(self):
         user = User(password='cat')
         self.assertTrue(user.password_hash is not None)
@@ -19,7 +31,7 @@ class UserModelTestCase(unittest.TestCase):
     def test_no_password_getter(self):
         user = User(password='cat')
         with self.assertRaises(AttributeError):
-            user.password
+            print(user.password)
 
     def test_password_verification(self):
         user = User(password='cat')
