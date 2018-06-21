@@ -5,8 +5,8 @@ from flask_pagedown.fields import PageDownField
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError
 
-from ..models.user import User
-from ..models.role import Role
+from flask_web.models.user import User
+from flask_web.models.role import Role
 
 
 class NameForm(FlaskForm):

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from flask import jsonify, request, current_app, url_for
+
 from . import api
-from ..models.user import User
-from ..models.post import Post
+from flask_web.models.user import User
+from flask_web.models.post import Post
 
 
 @api.route('/users/<int:userid>')

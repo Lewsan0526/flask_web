@@ -31,3 +31,5 @@ webencodings==0.5.1
 Werkzeug==0.14.1
 WTForms==2.2.1
 coverage==4.5.1
+selenium==3.12.0
+honcho==1.0.1

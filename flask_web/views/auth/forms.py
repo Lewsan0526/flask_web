@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Length, Email, Regexp, EqualTo, ValidationError, DataRequired
 
-from ..models.user import User
+from flask_web.models.user import User
 
 
 class LoginForm(FlaskForm):

@@ -3,9 +3,10 @@
 import re
 import unittest
 
-from app import create_app, db
-from app.models.role import Role
-from app.models.user import User
+from flask_web.app import create_app
+from flask_web.ext import db
+from flask_web.models.role import Role
+from flask_web.models.user import User
 
 
 class FalskClientTestCase(unittest.TestCase):

@@ -9,11 +9,10 @@ from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db
+from ..ext import db,login_manager
 from .role import Role, Permission
 from .follow import Follow
 from .post import Post
-from .. import login_manager
 
 
 class User(UserMixin, db.Model):

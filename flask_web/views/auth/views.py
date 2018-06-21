@@ -3,15 +3,16 @@
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 
+from flask_web.ext import db
+from flask_web.models.user import User
+from flask_web.utils.email import send_email
 from . import auth
 from .forms import (LoginForm,
                     RegistrationForm,
                     ChangePasswordForm,
                     PasswordResetForm,
                     PasswordResetRequestForm, ChangeEmailForm, ChangeUserNameForm)
-from .. import db
-from ..models.user import User
-from app.utils.email import send_email
+
 
 @auth.before_app_first_request
 def before_request():

@@ -2,8 +2,8 @@
 
 from flask import jsonify
 
-from app.utils.exceptions import ValidationError
 from . import api
+from flask_web.utils.exceptions import ValidationError
 
 
 def bad_request(message):

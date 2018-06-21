@@ -5,9 +5,9 @@ from random import randint
 from faker import Faker
 from sqlalchemy.exc import IntegrityError
 
+from ..ext import db
 from .user import User
 from .post import Post
-from app import db
 
 
 def users(count=100):

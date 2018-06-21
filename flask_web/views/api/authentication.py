@@ -2,7 +2,7 @@
 from flask import g, jsonify
 from flask_httpauth import HTTPBasicAuth
 
-from ..models.user import User
+from flask_web.models.user import User
 from .errors import unauthorized, forbidden
 from . import api
 

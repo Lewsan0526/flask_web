@@ -3,13 +3,15 @@
 
 import os
 
-from app import create_app, db
-from app.models.follow import Follow
-from app.models.post import Post
-from app.models.user import User
-from app.models.role import Role, Permission
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
+
+from flask_web.app import create_app
+from flask_web.ext import db
+from flask_web.models.follow import Follow
+from flask_web.models.post import Post
+from flask_web.models.role import Role, Permission
+from flask_web.models.user import User
 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):

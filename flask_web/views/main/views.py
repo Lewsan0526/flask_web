@@ -3,15 +3,15 @@
 from flask import render_template, redirect, url_for, current_app, abort, flash, request, make_response
 from flask_login import login_required, current_user
 
+from flask_web.ext import db
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
 
-from .. import db
-from ..models.role import Role, Permission
-from ..models.user import User
-from ..models.post import Post
-from ..models.comment import Comment
-from ..utils.decorators import admin_required, permission_required
+from flask_web.models.role import Role, Permission
+from flask_web.models.user import User
+from flask_web.models.post import Post
+from flask_web.models.comment import Comment
+from flask_web.utils.decorators import admin_required, permission_required
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -257,3 +257,14 @@ def moderate_disable(id):
     db.session.commit()
     return redirect(url_for('.moderate',
                             page=request.args.get('page', 1, type=int)))
+
+
+@main.route('/shutdown')
+def server_shutdown():
+    if not current_app.testing:
+        abort(404)
+    shutdown = request.environ.get('werkzeug.server.shutdown')
+    if not shutdown:
+        abort(500)
+    shutdown()
+    return 'Shutting down...'

@@ -2,12 +2,12 @@
 
 from flask import request, current_app, url_for, jsonify, g
 
-from app import db
 from . import api
 from .errors import forbidden
 from .decorators import permission_required
-from ..models.post import Post
-from ..models.role import Permission
+from flask_web.ext import db
+from flask_web.models.post import Post
+from flask_web.models.role import Permission
 
 
 @api.route('/posts/')

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+
 from flask import request, current_app, url_for, jsonify, g
 
-from app import db
+from flask_web.ext import db
 from .decorators import permission_required
 from . import api
-from ..models.comment import Comment
-from ..models.post import Post
-from ..models.role import Permission
+from flask_web.models.comment import Comment
+from flask_web.models.post import Post
+from flask_web.models.role import Permission
 
 
 @api.route('/comments/')

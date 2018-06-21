@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from app import db
+from ..ext import db
 
 
 class Follow(db.Model):
